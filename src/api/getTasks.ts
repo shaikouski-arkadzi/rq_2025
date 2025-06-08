@@ -7,8 +7,8 @@ type Todo = {
 const BASE_URL = "http://localhost:3000";
 
 // signal can cancel request
-export const getTasks = () => {
-  return fetch(`${BASE_URL}/tasks`).then(
+export const getTasks = ({ signal }: { signal: AbortSignal }) => {
+  return fetch(`${BASE_URL}/tasks`, { signal }).then(
     (res) => res.json() as Promise<Todo[]>
   );
 };
