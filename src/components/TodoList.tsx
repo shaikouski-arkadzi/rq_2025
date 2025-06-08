@@ -18,11 +18,15 @@ const TodoList = () => {
   }
 
   return (
-    <div>
-      Todo List
-      {data.map((todo) => (
-        <div key={todo.id}>{todo.text}</div>
-      ))}
+    <div className="p-5 mx-auto max-w-[1200px] mt-10">
+      <h1 className="text-3xl font-bold mb-5">Todo List</h1>
+      <div className="flex flex-col gap-4">
+        {data.map((todo) => (
+          <div className="border border-slate-300 rounded p-3" key={todo.id}>
+            {todo.text}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
