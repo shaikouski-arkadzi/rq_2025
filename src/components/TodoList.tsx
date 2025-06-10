@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+} from "@tanstack/react-query";
 import getTasks from "../api/getTasks";
+import { useIntersection } from "../hooks/useIntersection";
 
 const TodoList = () => {
-  const [page, setPage] = useState(1);
-
   const [enabled, setEnabled] = useState(false);
 
   //queryKey - массив строк для различия запросов друг от друга
@@ -22,14 +25,24 @@ const TodoList = () => {
     status,
     fetchStatus,
     isPlaceholderData,
-  } = useQuery({
-    queryKey: ["todos", { page }],
-    queryFn: (meta) => getTasks({ page }, meta), // meta будет включать сигнал
+    fetchNextPage, // подгружает новую страницу
+    hasNextPage, // флаг есть ли следующая страница
+    isFetchingNextPage, // флаг срабатывает когда подгружаем следующую страницу
+  } = useInfiniteQuery({
+    queryKey: ["todos"],
+    queryFn: (meta) => getTasks({ page: meta.pageParam }, meta), // meta будет включать сигнал
     // placeholderData - данные которые показываются пока ничего нету
-    placeholderData: keepPreviousData, // показать предыдущие данные пока нет никаких данных
+    // placeholderData: keepPreviousData, // показать предыдущие данные пока нет никаких данных
     // initialData - наполнение кэша первоначальными значениями(например из localstorage)
     // enabled позволяю включать/выключать запросы
     enabled: enabled,
+    initialPageParam: 1,
+    getNextPageParam: (result) => result.next,
+    select: (result) => result.pages.flatMap((page) => page.data),
+  });
+
+  const cursorRef = useIntersection(() => {
+    fetchNextPage();
   });
 
   //status === "pending" && fetchStatus === "fetching"
@@ -52,25 +65,15 @@ const TodoList = () => {
           "flex flex-col gap-4 mb-5" + (isPlaceholderData ? " opacity-50" : "")
         }
       >
-        {data?.data.map((todo) => (
+        {data?.map((todo) => (
           <div className="border border-slate-300 rounded p-3" key={todo.id}>
             {todo.text}
           </div>
         ))}
       </div>
-      <div className="flex gap-2">
-        <button
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
-          className="p-3 rounded border border-teal-500 uppercase"
-        >
-          prev
-        </button>
-        <button
-          onClick={() => setPage((p) => Math.min(p + 1, data.pages))}
-          className="p-3 rounded border border-teal-500 uppercase"
-        >
-          next
-        </button>
+      <div className="flex gap-2 mt4" ref={cursorRef}>
+        {!hasNextPage && <div>Нет данных для загрузки</div>}
+        {isFetchingNextPage && <div>Loading...</div>}
       </div>
     </div>
   );
