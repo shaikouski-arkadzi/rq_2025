@@ -1,4 +1,5 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
+import { jsonApiInstance } from "./apiInstance";
 
 type Todo = {
   id: string;
@@ -16,23 +17,18 @@ type PaginatedResult<T> = {
   prev: number | null;
 };
 
-const BASE_URL = "http://localhost:3000";
-
+// signal can cancel request
 export const todoListApi = {
-  // signal can cancel request
-  getTasks: (
-    { page }: { page: number },
-    { signal }: { signal: AbortSignal }
-  ) => {
-    return fetch(`${BASE_URL}/tasks?_page=${page}&_per_page=10`, {
-      signal,
-    }).then((res) => res.json() as Promise<PaginatedResult<Todo>>);
-  },
-
   getTasksListQueryOptions: ({ page }: { page: number }) => {
     return queryOptions({
       queryKey: ["todos", { page }],
-      queryFn: (meta) => todoListApi.getTasks({ page }, meta),
+      queryFn: (meta) =>
+        jsonApiInstance<PaginatedResult<Todo>>(
+          `/tasks?_page=${page}&_per_page=10`,
+          {
+            signal: meta.signal,
+          }
+        ),
     });
   },
 
@@ -41,7 +37,13 @@ export const todoListApi = {
   getTasksListInfinityQueryOptions: () => {
     return infiniteQueryOptions({
       queryKey: ["todos"],
-      queryFn: (meta) => todoListApi.getTasks({ page: meta.pageParam }, meta), // meta будет включать сигнал
+      queryFn: (meta) =>
+        jsonApiInstance<PaginatedResult<Todo>>(
+          `/tasks?_page=${meta.pageParam}?_per_page=10`,
+          {
+            signal: meta.signal,
+          }
+        ), // meta будет включать сигнал
       // placeholderData - данные которые показываются пока ничего нету
       // placeholderData: keepPreviousData, // показать предыдущие данные пока нет никаких данных
       // initialData - наполнение кэша первоначальными значениями(например из localstorage)

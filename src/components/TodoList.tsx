@@ -6,19 +6,15 @@ import { todoListApi } from "../api/getTasks";
 const TodoList = () => {
   const [enabled, setEnabled] = useState(false);
 
-  //status - наличие данных в кэше. если нет данных-pending. success. error
-  //fetchStatus - состояние загрузки. fetching - получаем. paused. idle - ожидание
-  //isFetching - на перезапрос
-  //isPending - если данных нет
   const {
     data,
     error,
-    isPending,
-    isFetching,
-    isLoading,
-    status,
-    fetchStatus,
-    isPlaceholderData,
+    isPending, // если нужно пока нет данных что-то отобразить
+    isFetching, // если нужно на перезапрос данных что-то отобразить
+    isLoading, // если нужно на загрузку данных что-то отобразить
+    status, // наличие данных в кэше. если нет данных-pending. success. error
+    fetchStatus, // состояние загрузки. fetching - получаем. paused. idle - ожидание
+    isPlaceholderData, // если во время подгрузки новых данных отображаются данные-заглушки
     fetchNextPage, // подгружает новую страницу
     hasNextPage, // флаг есть ли следующая страница
     isFetchingNextPage, // флаг срабатывает когда подгружаем следующую страницу
