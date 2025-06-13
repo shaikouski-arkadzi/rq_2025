@@ -1,4 +1,4 @@
-# React Query
+# React Query Infinity scroll version
 
 ## `isLoading`
 

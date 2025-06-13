@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { todoListApi } from "../api/getTasks";
+import { todoListApi } from "../api/requests";
 import { useIntersection } from "./useIntersection";
 
 export function useTodoList(enabled: boolean) {
