@@ -5,6 +5,7 @@ type Todo = {
   id: string;
   text: string;
   done: boolean;
+  userId: string;
 };
 
 type PaginatedResult<T> = {
@@ -19,16 +20,14 @@ type PaginatedResult<T> = {
 
 // signal can cancel request
 export const todoListApi = {
-  getTasksListQueryOptions: ({ page }: { page: number }) => {
+  baseKey: "todos",
+  getTasksListQueryOptions: () => {
     return queryOptions({
-      queryKey: ["todos", { page }],
+      queryKey: [todoListApi.baseKey],
       queryFn: (meta) =>
-        jsonApiInstance<PaginatedResult<Todo>>(
-          `/tasks?_page=${page}&_per_page=10`,
-          {
-            signal: meta.signal,
-          }
-        ),
+        jsonApiInstance<Todo[]>(`/tasks`, {
+          signal: meta.signal,
+        }),
     });
   },
 
@@ -36,10 +35,10 @@ export const todoListApi = {
   //queryFn - любая асинхронная функция, которая возвращает промис
   getTasksListInfinityQueryOptions: () => {
     return infiniteQueryOptions({
-      queryKey: ["todos"],
+      queryKey: [todoListApi.baseKey],
       queryFn: (meta) =>
         jsonApiInstance<PaginatedResult<Todo>>(
-          `/tasks?_page=${meta.pageParam}?_per_page=10`,
+          `/tasks?_page=${meta.pageParam}&_per_page=10`,
           {
             signal: meta.signal,
           }
@@ -52,6 +51,26 @@ export const todoListApi = {
       getNextPageParam: (result) => result.next,
       //объедить странницы для вывода
       select: (result) => result.pages.flatMap((page) => page.data),
+    });
+  },
+
+  createTodo: (data: Todo) => {
+    return jsonApiInstance<Todo>("/tasks", {
+      method: "POST",
+      json: data,
+    });
+  },
+
+  updateTodo: (id: string, data: Partial<Todo>) => {
+    return jsonApiInstance<Todo>(`/tasks/${id}`, {
+      method: "PATCH",
+      json: data,
+    });
+  },
+
+  deleteTodo: (id: string) => {
+    return jsonApiInstance<Todo>(`/tasks/${id}`, {
+      method: "DELETE",
     });
   },
 };

@@ -1,6 +1,5 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { todoListApi } from "../api/getTasks";
-import { useIntersection } from "./useIntersection";
+import { useQuery } from "@tanstack/react-query";
+import { todoListApi } from "../api/requests";
 
 export function useTodoList(enabled: boolean) {
   const {
@@ -15,27 +14,16 @@ export function useTodoList(enabled: boolean) {
     fetchNextPage, // подгружает новую страницу
     hasNextPage, // флаг есть ли следующая страница
     isFetchingNextPage, // флаг срабатывает когда подгружаем следующую страницу
-  } = useInfiniteQuery({
-    ...todoListApi.getTasksListInfinityQueryOptions(),
+  } = useQuery({
+    ...todoListApi.getTasksListQueryOptions(),
     enabled: enabled,
+    select: (data) => [...data].reverse(),
   });
-
-  const cursorRef = useIntersection(() => {
-    fetchNextPage();
-  });
-
-  const cursor = (
-    <div className="flex gap-2 mt4" ref={cursorRef}>
-      {!hasNextPage && <div>Нет данных для загрузки</div>}
-      {isFetchingNextPage && <div>Loading...</div>}
-    </div>
-  );
 
   return {
     error,
     data,
     isLoading,
-    cursor,
     isPlaceholderData,
   };
 }
