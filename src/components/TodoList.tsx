@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useTodoList } from "../hooks/useTodoList";
 import { useCreateTodo } from "../hooks/useCreateTodo";
+import { useDeleteTodo } from "../hooks/useDeleteTodo";
 
 const TodoList = () => {
   const [enabled, setEnabled] = useState(false);
   const { data, error, isLoading, isPlaceholderData } = useTodoList(enabled);
 
   const { handleCreate, isPending } = useCreateTodo();
+  const { handleDelete, getIsPending } = useDeleteTodo();
 
   //status === "pending" && fetchStatus === "fetching"
   if (isLoading) {
@@ -43,12 +45,22 @@ const TodoList = () => {
       </button>
       <div
         className={
-          "flex flex-col gap-4 mb-5" + (isPlaceholderData ? " opacity-50" : "")
+          "flex flex-col gap-4 my-5" + (isPlaceholderData ? " opacity-50" : "")
         }
       >
         {data?.map((todo) => (
-          <div className="border border-slate-300 rounded p-3" key={todo.id}>
+          <div
+            className="border border-slate-300 rounded p-3 flex justify-between"
+            key={todo.id}
+          >
             {todo.text}
+            <button
+              disabled={getIsPending(todo.id)}
+              onClick={() => handleDelete(todo.id)}
+              className="text-rose-500 font-bold disabled:text-rose-300"
+            >
+              Удалить
+            </button>
           </div>
         ))}
       </div>
