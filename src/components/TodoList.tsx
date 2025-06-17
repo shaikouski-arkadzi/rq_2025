@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTodoList } from "../hooks/useTodoList";
 import { useCreateTodo } from "../hooks/useCreateTodo";
 import { useDeleteTodo } from "../hooks/useDeleteTodo";
+import { useToggleTodo } from "../hooks/useToggleTodo";
 
 const TodoList = () => {
   const [enabled, setEnabled] = useState(false);
@@ -9,6 +10,7 @@ const TodoList = () => {
 
   const { handleCreate, isPending } = useCreateTodo();
   const { handleDelete, getIsPending } = useDeleteTodo();
+  const { toggleTodo } = useToggleTodo();
 
   //status === "pending" && fetchStatus === "fetching"
   if (isLoading) {
@@ -53,6 +55,11 @@ const TodoList = () => {
             className="border border-slate-300 rounded p-3 flex justify-between"
             key={todo.id}
           >
+            <input
+              type="checkbox"
+              checked={todo.done}
+              onChange={() => toggleTodo(todo.id, todo.done)}
+            />
             {todo.text}
             <button
               disabled={getIsPending(todo.id)}
