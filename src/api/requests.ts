@@ -61,8 +61,8 @@ export const todoListApi = {
     });
   },
 
-  updateTodo: (id: string, data: Partial<Todo>) => {
-    return jsonApiInstance<Todo>(`/tasks/${id}`, {
+  updateTodo: (data: Partial<Todo> & { id: string }) => {
+    return jsonApiInstance<Todo>(`/tasks/${data.id}`, {
       method: "PATCH",
       json: data,
     });
