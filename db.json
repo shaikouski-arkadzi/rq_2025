@@ -1,4 +1,21 @@
 {
+  "users": [
+    {
+      "id": "1",
+      "login": "arkadiy",
+      "password": "12345"
+    },
+    {
+      "id": "2",
+      "login": "bob",
+      "password": "password"
+    },
+    {
+      "id": "3",
+      "login": "carol",
+      "password": "mypassword123"
+    }
+  ],
   "tasks": [
     {
       "id": "1",

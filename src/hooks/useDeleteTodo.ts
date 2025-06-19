@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { todoListApi } from "../api/requests";
+import { todoListApi } from "../api/todoListApi";
 
 export function useDeleteTodo() {
   const queryClient = useQueryClient();
