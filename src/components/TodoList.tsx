@@ -3,6 +3,7 @@ import { useTodoList } from "../hooks/useTodoList";
 import { useCreateTodo } from "../hooks/useCreateTodo";
 import { useDeleteTodo } from "../hooks/useDeleteTodo";
 import { useToggleTodo } from "../hooks/useToggleTodo";
+import { useUser } from "../hooks/useUser";
 
 const TodoList = () => {
   const [enabled, setEnabled] = useState(false);
@@ -11,6 +12,8 @@ const TodoList = () => {
   const { handleCreate, isPending } = useCreateTodo();
   const { handleDelete, getIsPending } = useDeleteTodo();
   const { toggleTodo } = useToggleTodo();
+
+  const { data: userData } = useUser();
 
   //status === "pending" && fetchStatus === "fetching"
   if (isLoading) {
@@ -23,7 +26,9 @@ const TodoList = () => {
 
   return (
     <div className="p-5 mx-auto max-w-[1200px] mt-10">
-      <h1 className="text-3xl font-bold mb-5">Todo List</h1>
+      <h1 className="text-3xl font-bold mb-5">
+        Todo List. Owner: {userData?.login}
+      </h1>
 
       <form className="flex gap-2 mb-5" onSubmit={handleCreate}>
         <input
