@@ -40,7 +40,7 @@ export const todoListApi = {
       queryKey: ["todos"],
       queryFn: (meta) =>
         jsonApiInstance<PaginatedResult<Todo>>(
-          `/tasks?_page=${meta.pageParam}?_per_page=10`,
+          `/tasks?_page=${meta.pageParam}&_per_page=10`,
           {
             signal: meta.signal,
           }

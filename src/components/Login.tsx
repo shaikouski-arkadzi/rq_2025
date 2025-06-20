@@ -1,5 +1,5 @@
 import { authSlice } from "../utils/auth.slice";
-import { loginThunk, useLoginLoading } from "../utils/login-thunk";
+import { loginThunk, useLoginLoading } from "../utils/login.thunk";
 import { useAppDispatch, useAppSelector } from "../utils/redux";
 
 function Login() {

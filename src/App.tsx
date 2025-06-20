@@ -1,7 +1,7 @@
 import Login from "./components/Login";
 import TodoList from "./components/TodoList";
 import { useUser } from "./hooks/useUser";
-import { logoutThunk } from "./utils/logout-thunk";
+import { logoutThunk } from "./utils/logout.thunk";
 import { useAppDispatch } from "./utils/redux";
 
 function App() {

@@ -4,13 +4,15 @@ import { useCreateTodo } from "../hooks/useCreateTodo";
 import { useDeleteTodo } from "../hooks/useDeleteTodo";
 import { useToggleTodo } from "../hooks/useToggleTodo";
 import { useUser } from "../hooks/useUser";
+import { useCreateLoading } from "../utils/createTodo.thunk";
 
 const TodoList = () => {
   const [enabled, setEnabled] = useState(false);
   const { data, error, isLoading, isPlaceholderData, cursor } =
     useTodoList(enabled);
 
-  const { handleCreate, isPending } = useCreateTodo();
+  const { handleCreate } = useCreateTodo();
+  const isLoadingCreate = useCreateLoading();
   const { handleDelete, getIsPending } = useDeleteTodo();
   const { toggleTodo } = useToggleTodo();
 
@@ -38,7 +40,7 @@ const TodoList = () => {
           name="text"
         />
         <button
-          disabled={isPending}
+          disabled={isLoadingCreate}
           className="rounded p-2 border border-teal-500 disabled:opacty-50"
         >
           Создать
