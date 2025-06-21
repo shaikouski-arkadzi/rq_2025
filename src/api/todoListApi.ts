@@ -1,7 +1,7 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { jsonApiInstance } from "./apiInstance";
 
-type Todo = {
+export type Todo = {
   id: string;
   text: string;
   done: boolean;

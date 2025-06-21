@@ -7,9 +7,10 @@ import { useUser } from "../hooks/useUser";
 
 const TodoList = () => {
   const [enabled, setEnabled] = useState(false);
+
   const { data, error, isLoading, isPlaceholderData } = useTodoList(enabled);
 
-  const { handleCreate, isPending } = useCreateTodo();
+  const { handleCreate, isCreateLoading } = useCreateTodo();
   const { handleDelete, getIsPending } = useDeleteTodo();
   const { toggleTodo } = useToggleTodo();
 
@@ -37,7 +38,7 @@ const TodoList = () => {
           name="text"
         />
         <button
-          disabled={isPending}
+          disabled={isCreateLoading}
           className="rounded p-2 border border-teal-500 disabled:opacty-50"
         >
           Создать
