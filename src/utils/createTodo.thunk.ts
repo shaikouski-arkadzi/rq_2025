@@ -4,6 +4,7 @@ import { AppThunk } from "./redux";
 import { queryClient } from "./queryClient";
 import { Todo, todoListApi } from "../api/todoListApi";
 import { authSlice } from "./auth.slice";
+import { authApi } from "../api/authApi";
 
 export const createTodoThunk =
   (text: string): AppThunk =>
@@ -14,10 +15,13 @@ export const createTodoThunk =
       throw new Error("Пользователь не залогинен");
     }
 
+    // получить данные из кэша
+    const user = await queryClient.fetchQuery(authApi.getUserById(userId));
+
     const newTodo: Todo = {
       id: uuidv4(),
       done: false,
-      text,
+      text: `${text}. Owner: ${user.login}`,
       userId,
     };
 
