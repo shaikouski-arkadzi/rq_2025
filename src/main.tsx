@@ -10,6 +10,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { queryClient } from "./utils/queryClient.ts";
 import { store } from "./utils/redux.ts";
+import Loader from "./components/Loader.tsx";
 
 onlineManager.setOnline(navigator.onLine);
 
@@ -31,7 +32,9 @@ createRoot(document.getElementById("root")!).render(
       }}
     >
       <Provider store={store}>
-        <App />
+        <Loader>
+          <App />
+        </Loader>
       </Provider>
       <ReactQueryDevtools initialIsOpen={false} />
     </PersistQueryClientProvider>

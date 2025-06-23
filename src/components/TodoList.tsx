@@ -19,9 +19,9 @@ const TodoList = () => {
   const { data: userData } = useUser();
 
   //status === "pending" && fetchStatus === "fetching"
-  if (isLoading) {
-    return <div>Loading</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading</div>;
+  // }
 
   if (error) {
     return <div>error: {JSON.stringify(error)}</div>;

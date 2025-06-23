@@ -20,12 +20,18 @@ export type PaginatedResult<T> = {
 
 // signal can cancel request
 export const todoListApi = {
-  getTasksListQueryOptions: ({ page }: { page: number }) => {
+  getTasksListQueryOptions: ({
+    page,
+    userId,
+  }: {
+    page: number;
+    userId: string;
+  }) => {
     return queryOptions({
       queryKey: ["todos", { page }],
       queryFn: (meta) =>
         jsonApiInstance<PaginatedResult<Todo>>(
-          `/tasks?_page=${page}&_per_page=10`,
+          `/tasks?userId=${userId}&_page=${page}&_per_page=10`,
           {
             signal: meta.signal,
           }
