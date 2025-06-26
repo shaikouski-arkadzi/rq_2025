@@ -21,11 +21,11 @@ type PaginatedResult<T> = {
 // signal can cancel request
 export const todoListApi = {
   baseKey: "todos",
-  getTasksListQueryOptions: () => {
+  getTasksListQueryOptions: ({ userId }: { userId: string }) => {
     return queryOptions({
       queryKey: [todoListApi.baseKey],
       queryFn: (meta) =>
-        jsonApiInstance<Todo[]>(`/tasks`, {
+        jsonApiInstance<Todo[]>(`/tasks?userId=${userId}`, {
           signal: meta.signal,
         }),
     });

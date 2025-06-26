@@ -10,12 +10,16 @@ import "./index.css";
 import App from "./App.tsx";
 import { queryClient } from "./utils/queryClient.ts";
 import { store } from "./utils/redux.ts";
+import Loader from "./components/Loader.tsx";
+import { prefetchAuth } from "./utils/prefetchAuth.ts";
 
 onlineManager.setOnline(navigator.onLine);
 
 const persister = createSyncStoragePersister({
   storage: window.localStorage,
 });
+
+prefetchAuth();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -31,7 +35,9 @@ createRoot(document.getElementById("root")!).render(
       }}
     >
       <Provider store={store}>
-        <App />
+        <Loader>
+          <App />
+        </Loader>
       </Provider>
       <ReactQueryDevtools initialIsOpen={false} />
     </PersistQueryClientProvider>

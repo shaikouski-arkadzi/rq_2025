@@ -1,7 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { todoListApi } from "../api/todoListApi";
+import { useUser } from "./useUser";
 
 export function useTodoList(enabled: boolean) {
+  const user = useUser();
+
   const {
     data,
     error,
@@ -14,9 +17,9 @@ export function useTodoList(enabled: boolean) {
     fetchNextPage, // подгружает новую страницу
     hasNextPage, // флаг есть ли следующая страница
     isFetchingNextPage, // флаг срабатывает когда подгружаем следующую страницу
-  } = useQuery({
-    ...todoListApi.getTasksListQueryOptions(),
-    enabled: enabled,
+  } = useSuspenseQuery({
+    ...todoListApi.getTasksListQueryOptions({ userId: user.data.id }),
+    // enabled: enabled,
     select: (data) => [...data].reverse(),
   });
 

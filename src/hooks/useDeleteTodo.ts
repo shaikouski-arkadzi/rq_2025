@@ -1,8 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { todoListApi } from "../api/todoListApi";
+import { useUser } from "./useUser";
 
 export function useDeleteTodo() {
   const queryClient = useQueryClient();
+
+  const user = useUser();
 
   const deleteTodoMutation = useMutation({
     mutationFn: todoListApi.deleteTodo,
@@ -14,7 +17,7 @@ export function useDeleteTodo() {
     async onSuccess(data, deletedId) {
       // вручную удаляем данные из кэша
       queryClient.setQueryData(
-        todoListApi.getTasksListQueryOptions().queryKey,
+        todoListApi.getTasksListQueryOptions({ userId: user.data.id }).queryKey,
         (todos) => todos?.filter((item) => item.id !== deletedId)
       );
     },

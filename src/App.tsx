@@ -3,6 +3,7 @@ import TodoList from "./components/TodoList";
 import { useUser } from "./hooks/useUser";
 import { logoutThunk } from "./utils/logout-thunk";
 import { useAppDispatch } from "./utils/redux";
+import { prefetchTodo } from "./utils/prefetchTodo";
 
 function App() {
   const { data, isLoading } = useUser();
@@ -13,6 +14,8 @@ function App() {
   }
 
   if (data) {
+    prefetchTodo();
+
     return (
       <>
         <button

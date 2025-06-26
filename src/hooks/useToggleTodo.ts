@@ -1,8 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { todoListApi } from "../api/todoListApi";
+import { useUser } from "./useUser";
 
 export function useToggleTodo() {
   const queryClient = useQueryClient();
+
+  const user = useUser();
 
   const updateTodoMutation = useMutation({
     mutationFn: todoListApi.updateTodo,
@@ -14,12 +17,12 @@ export function useToggleTodo() {
 
       // Получаем предыдущее значение из кэша
       const previousTodos = queryClient.getQueryData(
-        todoListApi.getTasksListQueryOptions().queryKey
+        todoListApi.getTasksListQueryOptions({ userId: user.data.id }).queryKey
       );
 
       // Дополняем предыдущее значение с новым
       queryClient.setQueryData(
-        todoListApi.getTasksListQueryOptions().queryKey,
+        todoListApi.getTasksListQueryOptions({ userId: user.data.id }).queryKey,
         (oldData) =>
           oldData?.map((task) =>
             task.id === newTask.id ? { ...task, ...newTask } : task
@@ -35,7 +38,8 @@ export function useToggleTodo() {
     onError: (err, newTodo, context) => {
       if (context) {
         queryClient.setQueryData(
-          todoListApi.getTasksListQueryOptions().queryKey,
+          todoListApi.getTasksListQueryOptions({ userId: user.data.id })
+            .queryKey,
           context.previousTodos
         );
       }
