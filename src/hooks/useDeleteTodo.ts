@@ -7,30 +7,16 @@ export function useDeleteTodo() {
   const deleteTodoMutation = useMutation({
     mutationFn: todoListApi.deleteTodo,
     onSettled() {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      queryClient.invalidateQueries({ queryKey: [todoListApi.baseKey] });
     },
     // data - результат запроса
     // variables - то что передаем в мутацию. В этом случае id
     async onSuccess(data, deletedId) {
-      // берем данные в кэше по такому же ключу как мы получали данные
-      const todos = queryClient.getQueryData(
-        todoListApi.getTasksListInfinityQueryOptions().queryKey
-      ); // получаем закэшированные todo
-      if (todos)
-        // вручную удаляем данные из кэша
-        queryClient.setQueryData(
-          todoListApi.getTasksListInfinityQueryOptions().queryKey,
-          (oldData) => {
-            if (!oldData) return oldData;
-            return {
-              ...oldData,
-              pages: oldData.pages.map((page) => ({
-                ...page,
-                data: page.data.filter((item) => item.id !== deletedId),
-              })),
-            };
-          }
-        );
+      // вручную удаляем данные из кэша
+      queryClient.setQueryData(
+        todoListApi.getTasksListQueryOptions().queryKey,
+        (todos) => todos?.filter((item) => item.id !== deletedId)
+      );
     },
   });
 
